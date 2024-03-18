@@ -2,25 +2,28 @@
 
 class CalculatorDTO
 {
-    public $firstNumber;
-    public $secondNumber;
-    public $result;
-}
+    public float $firstNumber;
+    public float $secondNumber;
+    public float $result;
 
-interface HandlerInterface
-{
-    public function handle(CalculatorDTO $dto): void;
+    public function __construct(float $firstNumber, float $secondNumer, float $result)
+    {
+        $this->firstNumber = $firstNumber;
+        $this->secondNumber = $secondNumer;
+        $this->result = $result;
+    }
 }
 
 class AddStrategy implements HandlerInterface
 {
     public function handle(CalculatorDTO $dto): void
-    { 
+    {
         $dto->result = $dto->firstNumber + $dto->secondNumber;
     }
 
-    public function getName(){
-        return 'Сложение';
+    public function getName()
+    {
+        return "сложение";
     }
 }
 
@@ -31,121 +34,189 @@ class SubStrategy implements HandlerInterface
         $dto->result = $dto->firstNumber - $dto->secondNumber;
     }
 
-    public function getName(){
-        return 'Вычитание';
-    }
-}
-
-class MultStrategy implements HandlerInterface
-{
-    public function handle(CalculatorDTO $dto): void
+    public function getName()
     {
-        $dto->result = $dto->firstNumber * $dto->secondNumber;   
+        return "вычитание";
     }
-
-    public function getName(){
-        return 'Умножение';
-    }
-    
 }
 
-class DivStrategy implements HandlerInterface{
+class DivStrategy implements HandlerInterface
+{
     public function handle(CalculatorDTO $dto): void
     {
         $dto->result = $dto->firstNumber / $dto->secondNumber;
     }
 
-    public function getName(){
-        return 'Деление';
+    public function getName()
+    {
+        return "деление";
     }
 }
 
-class CalcutlatorHandler implements HandlerInterface
+
+class MultStrategy implements HandlerInterface
 {
-    private $strategies;
-   
-    public function __construct()
-    {
-        $this->strategies = [
-          new AddStrategy(),
-          new SubStrategy(),
-          new MultStrategy(),
-          new DivStrategy()
-        ];
-    }
-    
     public function handle(CalculatorDTO $dto): void
     {
-        $i = 0;
-        $itter = 1;
-        $combinations = [];
-        $flag = true;
-        while ($flag){
-            shuffle($this->strategies);
-            echo "<br>";
-            foreach ($this->strategies as $strategy) {
-                if ($strategy->getName() === "Сложение" && $dto->result >= 0 ) {
-                    $strategy->handle($dto);
-                    echo $strategy->getName(). ". Результат: " . $dto->result . "<br>";
-                    $i++;
-                    $combinations[] = $strategy->getName();
-                }
-
-                if ($strategy->getName() === "Умножение" && $dto->result > 10) {
-                    $strategy->handle($dto);
-                    echo $strategy->getName(). ". Результат: " . $dto->result . "<br>";
-                    $i++;
-                    $combinations[] = $strategy->getName();
-                }
-
-                if ($strategy->getName() === "Деление" && $dto->result > 1000) {
-                    $strategy->handle($dto);
-                    echo $strategy->getName(). ". Результат: " . $dto->result . "<br>";
-                    $i++;
-                    $combinations[] = $strategy->getName();
-                }
-
-                if ($strategy->getName() === "Вычитание" && $dto->result < 1000 ) {
-                    $strategy->handle($dto);
-                    echo $strategy->getName(). ". Результат: " . $dto->result . "<br>";
-                    $i++;
-                    $combinations[] = $strategy->getName();
-                }
-               
-                if(($i == 4) &&
-                    !($strategy->getName() === "Сложение" && $dto->result >= 0 ) &&
-                    !($strategy->getName() === "Умножение" && $dto->result > 10)&&
-                    !($strategy->getName() === "Деление" && $dto->result > 1000) &&
-                    !($strategy->getName() === "Вычитание" && $dto->result < 1000))
-                    {
-                        echo "------↑Удачная комбинация↑------" . "<br>";
-                        print_r((array_slice($combinations,-4)));
-                        echo "Выполненно итераций: $itter";
-                        $flag = false;
-                        
-                    }
-                }
-            if ($dto->result < 0) {
-                break;
-            }
-            $itter++;
-            $i = 0;
-        }  
-        
+        $dto->result = $dto->firstNumber * $dto->secondNumber;
     }
-    
+
+    public function getName()
+    {
+        return "умножение";
+    }
 }
 
+interface HandlerInterface
+{
+    public function handle(CalculatorDTO $dto): void;
+}
 
-echo "Найдена удачная комбинация" . "<br>";
-$dto = new CalculatorDTO();
-echo "Число 1 - " . ($dto->firstNumber =85) . "<br>";
-echo "Число 2 - " .  ($dto->secondNumber =17) . "<br>";
-echo "Текущий результат " . ($dto->result = 0) . "<br>";
-echo("<br>");
+class CalculatorHandler implements HandlerInterface
+{
+    private $failedCombinations;
+    private $succesCombination;
+    private $currentLog;
+    private $results;
+    private $iteration;
 
-$handler = new CalcutlatorHandler();
+    public function __construct()
+    {
+        $this->failedCombinations = [];
+        $this->succesCombination = [];
+        $this->results;
+        $this->currentLog;
+        $this->iteration;
+    }
+
+    private function checkCombination(array $results, array $strategies): bool
+    {
+        return (
+            count($results) == 4 &&
+            !($results[0] > 0 && $strategies[0] instanceof DivStrategy) &&
+            !($results[0] < 0 && $strategies[0] instanceof AddStrategy) &&
+            !($results[1] <= 1000 && $strategies[1] instanceof DivStrategy) &&
+            !($results[2] <= 10 && $strategies[2] instanceof MultStrategy) &&
+            !($results[3] >= 1000 && $strategies[3] instanceof SubStrategy)
+
+        );
+    }
+
+    private function shuffleStrategies(): array
+    {
+        $strategies = [
+            new AddStrategy(),
+            new SubStrategy(),
+            new DivStrategy(),
+            new MultStrategy(),
+        ];
+        shuffle($strategies);
+
+        return $strategies;
+    }
+
+    private function handleStrategy($strategies, $dto, &$results): void
+    {
+        foreach ($strategies as $strategy) {
+           
+            if ($strategy->getName() === "сложение" && $dto->result >= 0) {
+                $strategy->handle($dto);
+                $results[] = $dto->result;
+            }
+            if ($strategy->getName() === "умножение" && $dto->result > 10) {
+                $strategy->handle($dto);
+                $results[] = $dto->result;
+            }
+            if ($strategy->getName() === "вычитание" && $dto->result < 1000  ) {
+                $strategy->handle($dto);
+                $results[] = $dto->result;
+            }
+            if ($strategy->getName() === "деление" && $dto->result > 1000) {
+                $strategy->handle($dto);
+                $results[] = $dto->result;
+            }
+        }
+    }
+
+    private function prepapreStategies(CalculatorDTO $dto): void
+    {
+
+        $results = [];
+        $strategies = [];
+    
+     
+        while (!$this->checkCombination($results, $strategies)) {
+
+            $results = [];
+            
+            $this->iteration++;
+            $strategies = $this->shuffleStrategies();
+            $this->handleStrategy($strategies, $dto, $results);
+
+            $failedCombination = array_map(function ($strategy) {
+                return $strategy->getName();
+            }, $strategies);
+
+            $this->failedCombinations[] = $failedCombination;
+            
+            $maxSize = 50;
+            if (count($this->failedCombinations) >= $maxSize ) {
+               break;
+            }
+            
+        }
+        
+        $this->succesCombination = array_map(function ($strategy) {
+            return $strategy->getName();
+        }, $strategies);
+        $this->currentLog = $results;
+    }
+
+    public function handle(CalculatorDTO $dto): void
+    {
+        $this->prepapreStategies($dto);
+    }
+
+    public function getResult()
+    {
+        $results = [
+            'fail' => $this->failedCombinations,
+            'good' => $this->succesCombination,
+            'log' =>  $this->currentLog,
+            'iter' => $this->iteration
+        ];
+        return $results;
+    }
+}
+
+$dto = new CalculatorDTO(300, 700, 0);
+$handler = new CalculatorHandler();
+
+echo "Найдена удачная комбинация комбинцаия: <br>";
+echo "Число 1 - $dto->firstNumber <br>";
+echo "Число 2 - $dto->secondNumber <br>";
 $handler->handle($dto);
 
-echo '<br>';
+echo "Последовательность действий: <br>";
+foreach ($handler->getResult()['good'] as $good) {
+    echo $good . " ";
+};
 
+echo "<br>";
+
+echo "Выполнено итераций: ";
+echo $handler->getResult()['iter'];
+
+echo "<br>";
+echo "Лог выполнения: <br>";
+echo "Текущий результат 0  <br>";
+
+foreach ($handler->getResult()['log'] as $key => $result) {
+    echo "Выполнено действие: " . $handler->getResult()['good'][$key] . ". Результат: " . $result . "<br>";
+    echo "Текущий результат: " . $result . "<br>";
+}
+
+echo "неудачные комбинации : <br>";
+foreach ($handler->getResult()['fail'] as $key => $fail) {
+    echo implode(' ', $fail) . "<br>";
+}
