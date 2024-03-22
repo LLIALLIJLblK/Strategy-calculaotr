@@ -1,5 +1,10 @@
 <?php
 
+namespace Test\Strategies;
+
+use Test\DTO\CalculatorDTO;
+use Test\Interfaces\HandlerInterface;
+
 class MultStrategy implements HandlerInterface
 {
     public function handle(CalculatorDTO $dto): void

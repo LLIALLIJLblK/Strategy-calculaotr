@@ -1,10 +1,21 @@
 <?php
 
-require __DIR__ . '/../Interfaces/HandlerInterface.php';
-require __DIR__ . '/../Strategies/AddStrategy.php';
-require __DIR__ . '/../Strategies/SubStrategy.php';
-require __DIR__ . '/../Strategies/DivStrategy.php';
-require __DIR__ . '/../Strategies/MultStrategy.php';
+// require __DIR__ . '/../Interfaces/HandlerInterface.php';
+// require __DIR__ . '/../Strategies/AddStrategy.php';
+// require __DIR__ . '/../Strategies/SubStrategy.php';
+// require __DIR__ . '/../Strategies/DivStrategy.php';
+// require __DIR__ . '/../Strategies/MultStrategy.php';
+namespace Test\Calculator;
+
+
+use Test\Strategies\AddStrategy;
+use Test\Strategies\SubStrategy;
+use Test\Strategies\DivStrategy;
+use Test\Strategies\MultStrategy;
+use Test\DTO\CalculatorDTO;
+
+use Test\Interfaces\HandlerInterface;
+
 
 class CalculatorHandler implements HandlerInterface
 {

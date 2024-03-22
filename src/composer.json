@@ -1,0 +1,15 @@
+{
+    "name": "nikinoize/src",
+    "autoload": {
+        "psr-4": {
+            "Test\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nikita Duzhnov",
+            "email": "cr_ovr_web9@efko.ru"
+        }
+    ],
+    "require": {}
+}

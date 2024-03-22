@@ -1,5 +1,7 @@
 <?php
 
+namespace Test\DTO;
+
 class CalculatorDTO
 {
     public float $firstNumber;

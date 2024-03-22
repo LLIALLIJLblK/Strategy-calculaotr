@@ -2,8 +2,12 @@
 
 <?php
 
-require 'src/Calculator/CalculatorHandler.php';
-require 'src/DTO/CalculatorDTO.php';
+require_once 'src/vendor/autoload.php';
+
+use Test\Calculator\CalculatorHandler;
+use Test\DTO\CalculatorDTO;
+// require 'src/Calculator/CalculatorHandler.php';
+// require 'src/DTO/CalculatorDTO.php';
 
 $command = $argv[1];
 $arguments = array_slice($argv, 2);

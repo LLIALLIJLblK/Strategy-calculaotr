@@ -1,9 +1,11 @@
-
 <?php
 
-require 'Calculator/CalculatorHandler.php';
-require 'DTO/CalculatorDTO.php';
 
+
+require_once 'vendor/autoload.php';
+
+use Test\DTO\CalculatorDTO;
+use Test\Calculator\CalculatorHandler;
 
 $firstNumber = $_GET['firstNumber'];
 $secondNumber = $_GET['secondNumber'];
