@@ -11,23 +11,22 @@
 
 ## Мини-отчёт о проделанной работе 
 
-Ещё раз переписал программу, исправил баг с отрицательным числом, путём обнуления массива, настроил конфиг nginx чтоб наладить путь по выдаче данных через GET запрос, распределил все классы в отдельные директории 
+Сделал конкретный путь для консольного вывода результата, поменял порты чтоб не сбрасывать вебсервер на своём компьютере.
 
 ## Команды
 Для обычного вывода результата
 
-    http://localhost/index.php
+    http://localhost:8081/index.php
 Для докера
 
     docker-compose up -d 
 
 Для вывода результата в терминале
 
-    php bin/calculator/calculate-modes.php 300 700
+    ./bin calculator:calculate-modes 300 700
 
 Для вывода результата в адресной строке
 
-    http://localhost/calculator/calculate-modes?firstNumber=300&secondNumber=700
+    http://localhost:8081/calculator/calculate-modes?firstNumber=300&secondNumber=700
 
 
-    
