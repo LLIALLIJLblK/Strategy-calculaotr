@@ -1,13 +1,18 @@
 <?php
 
-
 require_once 'vendor/autoload.php';
 
 use Test\DTO\CalculatorDTO;
 use Test\Calculator\CalculatorHandler;
 
-$dto = new CalculatorDTO(300, 700, 0);
-$handler = new CalculatorHandler($dto);
+$firstNumber = $_GET['firstNumber'];
+$secondNumber = $_GET['secondNumber'];
+
+$f = $firstNumber;
+$s =  $secondNumber;
+
+$dto = new CalculatorDTO($f ,$s,0);
+$handler = new CalculatorHandler($f ,$s,0);
 
 echo "Найдена удачная комбинация комбинцаия: <br>";
 echo "Число 1 - $dto->firstNumber <br>";
@@ -37,3 +42,4 @@ echo "неудачные комбинации : <br>";
 foreach ($handler->getResult()['fail'] as $key => $fail) {
     echo implode(' ', $fail) . "<br>";
 }
+
